@@ -1,0 +1,15 @@
+jobs:
+- job: Upload_pypi
+  dependsOn:
+    - ${{ parameters.dependsOn }}
+  steps:
+  - ${{ each artifact in parameters.artifacts }}:
+    - task: DownloadPipelineArtifact@0
+      inputs:
+        artifactName: ${{ artifact }}
+        targetPath: $(System.DefaultWorkingDirectory)/dist
+    - script: |
+        ls dist
+
+
+
