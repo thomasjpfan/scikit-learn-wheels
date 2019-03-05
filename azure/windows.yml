@@ -31,7 +31,7 @@ jobs:
         echo %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%
         echo %BUILD_REASON%
         python --version
-        python -c \"import struct; print(struct.calcsize('P') * 8)\"
+        python -c "import struct; print(struct.calcsize('P') * 8)"
         pip --version
       displayName: Check that we have the expected version and architecture for Python
     - script: |
@@ -48,10 +48,10 @@ jobs:
       displayName: Checkout commit
     - script: |
         pip install --timeout=60 numpy==%NP_BUILD_DEP%
-        pip install --timeout=60 pytest wheel scipy==%SCIPY_BUILD_DEP Cython==%CYTHON_BUILD_DEP%
+        pip install --timeout=60 pytest wheel scipy==%SCIPY_BUILD_DEP% Cython==%CYTHON_BUILD_DEP%
 
         python setup.py bdist_wheel
-        pip install --pre --no-index --find-links dist\ scikit-learn
+        pip install --pre --no-index --find-links dist scikit-learn
 
         mkdir -p %AGENT_WORKFOLDER%\tmp_folder
         cd %AGENT_WORKFOLDER%\tmp_folder
