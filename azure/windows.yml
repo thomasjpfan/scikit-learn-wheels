@@ -53,8 +53,8 @@ jobs:
         python setup.py bdist_wheel
         pip install --pre --no-index --find-links dist scikit-learn
 
-        mkdir -p %AGENT_WORKFOLDER%\tmp_folder
-        cd %AGENT_WORKFOLDER%\tmp_folder
+        rd /s /q "sklearn"
+        del setup.cfg
 
         pip install -U --timeout=60 numpy
         pytest -rs --pyargs sklearn
