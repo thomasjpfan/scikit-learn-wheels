@@ -37,13 +37,13 @@ jobs:
     - script: |
         # Schedule == nightly builds
         if "%BUILD_REASON%" == "Schedule" (
-          if "%DAILY_BUILD%" != "true" (
+          if NOT "%DAILY_BUILD%" == "true" (
             exit 0
           )
           set BUILD_COMMIT = %DAILY_COMMIT%
         )
         pushd scikit-learn
-        git checkout %DAILY_COMMIT%
+        git checkout %BUILD_COMMIT%
         git clean -fxd
         git reset --hard
         popd
@@ -72,11 +72,10 @@ jobs:
       displayName: Build and test
     - script: |
         if "%BUILD_REASON%" == "Schedule" (
-          if "%DAILY_BUILD%" == "false" (
+          if NOT "%DAILY_BUILD%" == "true" (
             exit 0
           )
           set CONTAINER = "sklearn-nightly"
-          set BUILD_COMMIT = %DAILY_COMMIT%
         ) else (
           set CONTAINER = "wheels"
           set UPLOAD_ARGS = "--no-update-index"
