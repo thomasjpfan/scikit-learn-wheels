@@ -7,9 +7,6 @@ jobs:
   - job: ${{ parameters.name }}
     pool:
       vmImage: ${{ parameters.vmImage }}
-    variables:
-      NP_TEST_DEP: 'numpy==1.8.2'
-      NP_TEST_DEP: 'numpy==1.13.1'
     strategy:
       matrix:
         ${{ insert }}: ${{ parameters.matrix }}
