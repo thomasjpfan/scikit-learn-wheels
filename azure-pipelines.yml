@@ -10,7 +10,7 @@ jobs:
         MB_PYTHON_VERSION: '3.7'
 
 
-- job: Upload pypi
+- job: Upload-pypi
   dependsOn: linux
   pool:
     vmImage: ubuntu-16.04
