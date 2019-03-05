@@ -35,7 +35,6 @@ jobs:
         pip --version
       displayName: Check that we have the expected version and architecture for Python
     - script: |
-        # Schedule == nightly builds
         if "%BUILD_REASON%" == "Schedule" (
           if NOT "%DAILY_BUILD%" == "true" (
             exit 0
@@ -57,19 +56,12 @@ jobs:
         pip install --pre --no-index --find-links dist/ scikit-learn
         popd
 
-        # run inside another directory to run tests on the installed
-        # library
         mkdir tmp
         cd tmp
 
-        # Install the newest version of numpy for the tests: the goal is to ensure
-        # that the scikit-learn wheels are binary compatible both with the old numpy
-        # version against which they were built and the newest numpy version at the
-        # time of the release, that is the version of numpy that users are most
-        # likely to use.
         pip install -U --timeout=60 numpy
-        # pytest -rs --pyargs sklearn
-      displayName: Build and test
+        REM pytest -rs --pyargs sklearn
+      displayName: Build and Test
     - script: |
         if "%BUILD_REASON%" == "Schedule" (
           if NOT "%DAILY_BUILD%" == "true" (
@@ -80,9 +72,6 @@ jobs:
           set CONTAINER = "wheels"
           set UPLOAD_ARGS = "--no-update-index"
         )
-        # Upload the generated wheel package to Rackspace
-        # On Windows, Apache Libcloud cannot find a standard CA cert bundle so we
-        # disable the ssl checks.
         pip install --timeout=60 wheelhouse_uploader
         cd scikit-learn
         python -m wheelhouse_uploader upload \
@@ -90,5 +79,9 @@ jobs:
           --local-folder=dist \
           %UPLOAD_ARGS% \
           %CONTAINER%
-      displayName: Upload wheels
+      condition: succeeded()
+      env:
+        WHEELHOUSE_UPLOADER_SECRET: $(WHEELHOUSE_UPLOADER_SECRET)
+        WHEELHOUSE_UPLOADER_USERNAME: $(WHEELHOUSE_UPLOADER_USERNAME)
+      displayName: Upload wheel
 
