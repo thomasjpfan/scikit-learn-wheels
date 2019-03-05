@@ -12,5 +12,7 @@ jobs:
       ${{ insert }}: ${{ parameters.matrix }}
 
   steps:
+    - checkout: self
+      submodules: true
     - script: |
         echo hello world 2
