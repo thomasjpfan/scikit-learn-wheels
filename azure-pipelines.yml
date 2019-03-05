@@ -1,0 +1,9 @@
+jobs:
+- template: azure/posix.yml
+  parameters:
+    name: Linux
+    vmImage: ubuntu-16.04
+    matrix:
+      linux_3.7:
+        NP_TEST_DEP: 'numpy==1.14.5'
+        NP_TEST_DEP: 'numpy==1.14.5'
