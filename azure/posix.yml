@@ -18,7 +18,6 @@ jobs:
     CYTHON_TEST_DEP: 'cython'
     SCIPY_BUILD_DEP: 'scipy'
     SCIPY_TEST_DEP: 'scipy'
-    BUILD_COMMIT: 'master'
   strategy:
     matrix:
       ${{ insert }}: ${{ parameters.matrix }}
