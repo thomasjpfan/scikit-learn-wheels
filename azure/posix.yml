@@ -7,6 +7,14 @@ jobs:
 - job: ${{ parameters.name }}
   pool:
     vmImage: ${{ parameters.vmImage }}
+  parameters:
+    NP_BUILD_DEP: 'numpy==1.8.2'
+    NP_TEST_DEP: 'numpy==1.13.1'
+    CYTHON_BUILD_DEP: 'cython==0.28.5'
+    CYTHON_TEST_DEP: 'cython'
+    SCIPY_BUILD_DEP: 'scipy'
+    SCIPY_TEST_DEP: 'scipy'
+    BUILD_COMMIT: 'master'
   strategy:
     matrix:
       ${{ insert }}: ${{ parameters.matrix }}
@@ -15,4 +23,10 @@ jobs:
     - checkout: self
       submodules: true
     - script: |
-        echo hello world 2
+        echo "Building scikit-learn-$BUILD_COMMIT"
+        BUILD_DEPENDS="$NP_BUILD_DEP $CYTHON_BUILD_DEP $SCIPY_BUILD_DEP"
+        TEST_DEPENDS="$NP_TEST_DEP pytest $CYTHON_TEST_DEP $SCIPY_TEST_DEP"
+        source multibuild/common_utils.sh
+        source multibuild/travis_steps.sh
+        before_install
+

@@ -7,3 +7,4 @@ jobs:
       linux_3.7:
         NP_BUILD_DEP: '1.14.5'
         NP_TEST_DEP: '1.14.5'
+        MB_PYTHON_VERSION: '3.7'
