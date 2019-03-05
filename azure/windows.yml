@@ -53,7 +53,6 @@ jobs:
         python setup.py bdist_wheel
         pip install --pre --no-index --find-links dist scikit-learn
 
-        rd /s /q "sklearn"
         del setup.cfg
 
         pip install -U --timeout=60 numpy
