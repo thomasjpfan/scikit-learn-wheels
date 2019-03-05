@@ -4,14 +4,14 @@ parameters:
   matrix: []
 
 jobs:
-  - job: ${{ parameters.name }}
-    pool:
-      vmImage: ${{ parameters.vmImage }}
-    strategy:
-      matrix:
-        ${{ insert }}: ${{ parameters.matrix }}
-    steps:
-      - script: |
-          ls multibuild
+- job: ${{ parameters.name }}
+  pool:
+    vmImage: ${{ parameters.vmImage }}
+  strategy:
+    matrix:
+      ${{ insert }}: ${{ parameters.matrix }}
+  steps:
+    - script: |
+        ls multibuild
 
 
