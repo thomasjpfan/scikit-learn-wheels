@@ -68,7 +68,7 @@ jobs:
         # time of the release, that is the version of numpy that users are most
         # likely to use.
         pip install -U --timeout=60 numpy
-        pytest -rs --pyargs sklearn
+        # pytest -rs --pyargs sklearn
       displayName: Build and test
     - script: |
         if "%BUILD_REASON%" == "Schedule" (
