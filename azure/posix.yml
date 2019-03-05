@@ -12,5 +12,4 @@ jobs:
       ${{ insert }}: ${{ parameters.matrix }}
   steps:
   - script: |
-      ls multibuild
-    displayName: "Look multibuild"
+      echo hello world
