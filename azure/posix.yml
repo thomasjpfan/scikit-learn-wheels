@@ -18,6 +18,7 @@ jobs:
     CYTHON_TEST_DEP: 'cython'
     SCIPY_BUILD_DEP: 'scipy'
     SCIPY_TEST_DEP: 'scipy'
+    DAILY_COMMIT: 'master'
   strategy:
     matrix:
       ${{ insert }}: ${{ parameters.matrix }}
@@ -30,9 +31,6 @@ jobs:
         versionSpec: $(MB_PYTHON_VERSION)
       displayName: Set python version
     - script: |
-        pip install virtualenv
-      displayName: Install dependencies
-    - script: |
         if [ "$BUILD_REASON" == "Schedule" ]; then
           if [ "$DAILY_BUILD" != "true" ]; then
             exit 0
@@ -44,6 +42,7 @@ jobs:
           UPLOAD_ARGS="--no-update-index"
         fi
         echo "Building scikit-learn-$BUILD_COMMIT"
+        pip install virtualenv
         BUILD_DEPENDS="$NP_BUILD_DEP $CYTHON_BUILD_DEP $SCIPY_BUILD_DEP"
         TEST_DEPENDS="$NP_TEST_DEP pytest $CYTHON_TEST_DEP $SCIPY_TEST_DEP"
         source multibuild/common_utils.sh
@@ -77,4 +76,5 @@ jobs:
       env:
         WHEELHOUSE_UPLOADER_SECRET: $(WHEELHOUSE_UPLOADER_SECRET)
         WHEELHOUSE_UPLOADER_USERNAME: $(WHEELHOUSE_UPLOADER_USERNAME)
+      displayName: Upload to rackspace
 
