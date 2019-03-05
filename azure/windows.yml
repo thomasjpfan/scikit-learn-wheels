@@ -1,0 +1,77 @@
+parameters:
+  name: ''
+  vmImage: ''
+  matrix: []
+
+jobs:
+- job: ${{ parameters.name }}
+  pool:
+    vmImage: ${{ parameters.vmImage }}
+  variables:
+    BUILD_COMMIT: '0.20.3'
+    SKLEARN_SKIP_NETWORK_TESTS: '1'
+    NP_BUILD_DEP: '1.10.4'
+    CYTHON_BUILD_DEP: '0.28.5'
+    SCIPY_BUILD_DEP: '1.1.0'
+    DAILY_COMMIT: 'master'
+    DAILY_BUILD: 'false'
+  strategy:
+    matrix:
+      ${{ insert }}: ${{ parameters.matrix }}
+  steps:
+    - checkout: self
+      submodules: true
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: $(MB_PYTHON_VERSION)
+      displayName: Set python version
+    - script: |
+        echo %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%
+        echo %BUILD_REASON%
+        python --version
+        python -c \"import struct; print(struct.calcsize('P') * 8)\"
+        pip --version
+      displayName: Check that we have the expected version and architecture for Python
+    - script: |
+        # Schedule == nightly builds
+        if "%BUILD_REASON%" == "Schedule" (
+          if "%DAILY_BUILD%" == "false" (
+            exit 0
+          )
+          set BUILD_COMMIT = %DAILY_COMMIT%
+        )
+        git checkout %DAILY_COMMIT%
+        git clean -fxd
+        git reset --hard
+      displayName: Checkout commit
+    - script: |
+        pip install --timeout=60 numpy==%NP_BUILD_DEP%
+        pip install --timeout=60 pytest wheel scipy==%SCIPY_BUILD_DEP Cython==%CYTHON_BUILD_DEP%
+
+        python setup.py bdist_wheel
+        pip install --pre --no-index --find-links dist\ scikit-learn
+
+        mkdir -p %AGENT_WORKFOLDER%\tmp_folder
+        cd %AGENT_WORKFOLDER%\tmp_folder
+
+        pip install -U --timeout=60 numpy
+        pytest -rs --pyargs sklearn
+    - script: |
+        if "%BUILD_REASON%" == "Schedule" (
+          if "%DAILY_BUILD%" == "false" (
+            exit 0
+          )
+          set CONTAINER = "sklearn-nightly"
+          set BUILD_COMMIT = %DAILY_COMMIT%
+        ) else (
+          set CONTAINER = "wheels"
+          set UPLOAD_ARGS = "--no-update-index"
+        )
+        pip install --timeout=60 wheelhouse_uploader
+        python -m wheelhouse_uploader upload \
+          --no-ssl-check \
+          --local-folder=dist \
+          %UPLOAD_ARGS% \
+          %CONTAINER%
+      displayName: Upload wheels
+

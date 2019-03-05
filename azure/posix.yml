@@ -19,6 +19,7 @@ jobs:
     SCIPY_BUILD_DEP: 'scipy'
     SCIPY_TEST_DEP: 'scipy'
     DAILY_COMMIT: 'master'
+    DAILY_BUILD: 'false'
   strategy:
     matrix:
       ${{ insert }}: ${{ parameters.matrix }}
