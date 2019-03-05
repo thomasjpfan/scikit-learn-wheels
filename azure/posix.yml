@@ -7,10 +7,7 @@ jobs:
 - job: ${{ parameters.name }}
   pool:
     vmImage: ${{ parameters.vmImage }}
-  strategy:
-    matrix:
-      ${{ insert }}: ${{ parameters.matrix }}
   steps:
-  - script: ls multibuild
-
-
+  - script: |
+      ls multibuild
+    displayName: "Look multibuild"
