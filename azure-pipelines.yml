@@ -11,5 +11,7 @@ jobs:
 
 - template: azure/upload.yml
   parameters:
+    dependsOn:
+      - linux
     artifacts:
       - 'linux-py3.7'
