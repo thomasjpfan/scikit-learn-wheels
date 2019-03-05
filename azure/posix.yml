@@ -25,6 +25,7 @@ jobs:
     - task: UsePythonVersion@0
       inputs:
         versionSpec: $(MB_PYTHON_VERSION)
+      displayName: Set python version
     - script: |
         pip install virtualenv
       displayName: Install virtualenv
@@ -35,4 +36,11 @@ jobs:
         source multibuild/common_utils.sh
         source multibuild/travis_steps.sh
         before_install
+        if [[ $TRAVIS_OS_NAME = "osx" ]]; then enable_openmp; fi
+      displayName: Before install
+    - script: |
+        which clean_code
+
+
+
 
