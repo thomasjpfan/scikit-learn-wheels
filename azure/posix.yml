@@ -10,6 +10,3 @@ jobs:
   strategy:
     matrix:
       ${{ insert }}: ${{ parameters.matrix }}
-  steps:
-  - script: |
-      echo hello world
