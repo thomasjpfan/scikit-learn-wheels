@@ -22,6 +22,12 @@ jobs:
   steps:
     - checkout: self
       submodules: true
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: $(MB_PYTHON_VERSION)
+    - script: |
+        pip install virtualenv
+      displayName: Install virtualenv
     - script: |
         echo "Building scikit-learn-$BUILD_COMMIT"
         BUILD_DEPENDS="$NP_BUILD_DEP $CYTHON_BUILD_DEP $SCIPY_BUILD_DEP"
