@@ -30,13 +30,19 @@ jobs:
         versionSpec: $(MB_PYTHON_VERSION)
       displayName: Set python version
     - script: |
+        pip install virtualenv
+      displayName: Install dependencies
+    - script: |
         if [ "$BUILD_REASON" == "Schedule" ]; then
           if [ "$DAILY_BUILD" != "true" ]; then
             exit 0
           fi
+          CONTAINER="sklearn-nightly"
+          BUILD_COMMIT=${DAILY_COMMIT:-$BUILD_COMMIT}
+        else
+          CONTAINER=wheels
+          UPLOAD_ARGS="--no-update-index"
         fi
-
-        pip install virtualenv
         echo "Building scikit-learn-$BUILD_COMMIT"
         BUILD_DEPENDS="$NP_BUILD_DEP $CYTHON_BUILD_DEP $SCIPY_BUILD_DEP"
         TEST_DEPENDS="$NP_TEST_DEP pytest $CYTHON_TEST_DEP $SCIPY_TEST_DEP"
@@ -46,7 +52,7 @@ jobs:
         if [[ $TRAVIS_OS_NAME = "osx" ]]; then enable_openmp; fi
         clean_code $REPO_DIR $BUILD_COMMIT
         build_wheel $REPO_DIR $PLAT
-        # if [[ $TRAVIS_OS_NAME = "osx" ]]; then disable_system_openmp; fi
+        if [[ $TRAVIS_OS_NAME = "osx" ]]; then disable_system_openmp; fi
         # install_run $PLAT
       displayName: Build
       env:
@@ -63,9 +69,9 @@ jobs:
           UPLOAD_ARGS="--no-update-index"
         fi
         pip install wheelhouse-uploader
-        python -m wheelhouse_uploader upload --local-folder
-          $BUILD_REPOSITORY_LOCALPATH/wheelhouse/
-          $UPLOAD_ARGS
+        python -m wheelhouse_uploader upload --local-folder \
+          $BUILD_REPOSITORY_LOCALPATH/wheelhouse/ \
+          $UPLOAD_ARGS \
           $CONTAINER
       condition: succeeded()
       env:
