@@ -48,7 +48,8 @@ jobs:
     #   env:
     #     TRAVIS_OS_NAME: ${{ parameters.name }}
     - script: |
-        echo "$AGENT_WORKFOLDER"
+        pip install wheelhouse-uploader
+        ls "$(AGENT_WORKFOLDER)"
 
 
 
