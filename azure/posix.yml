@@ -47,9 +47,11 @@ jobs:
       displayName: Build
       env:
         TRAVIS_OS_NAME: ${{ parameters.name }}
-    - script: |
-        pip install wheelhouse-uploader
-        ls "$BUILD_REPOSITORY_LOCALPATH/wheelhouse"
+    - task: PublishPipelineArtifact@0
+      inputs:
+        artifactName: ${{ format('{0}-$(Agent.JobName)', parameters.name) }}
+        targetPath: $(Build.Repository.LocalPath)/wheelhouse
+      displayName: Upload artifact
 
 
 
