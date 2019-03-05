@@ -32,24 +32,24 @@ jobs:
     - script: |
         pip install virtualenv
       displayName: Install virtualenv
-    # - script: |
-    #     echo "Building scikit-learn-$BUILD_COMMIT"
-    #     BUILD_DEPENDS="$NP_BUILD_DEP $CYTHON_BUILD_DEP $SCIPY_BUILD_DEP"
-    #     TEST_DEPENDS="$NP_TEST_DEP pytest $CYTHON_TEST_DEP $SCIPY_TEST_DEP"
-    #     source multibuild/common_utils.sh
-    #     source multibuild/travis_steps.sh
-    #     before_install
-    #     if [[ $TRAVIS_OS_NAME = "osx" ]]; then enable_openmp; fi
-    #     clean_code $REPO_DIR $BUILD_COMMIT
-    #     build_wheel $REPO_DIR $PLAT
+    - script: |
+        echo "Building scikit-learn-$BUILD_COMMIT"
+        BUILD_DEPENDS="$NP_BUILD_DEP $CYTHON_BUILD_DEP $SCIPY_BUILD_DEP"
+        TEST_DEPENDS="$NP_TEST_DEP pytest $CYTHON_TEST_DEP $SCIPY_TEST_DEP"
+        source multibuild/common_utils.sh
+        source multibuild/travis_steps.sh
+        before_install
+        if [[ $TRAVIS_OS_NAME = "osx" ]]; then enable_openmp; fi
+        clean_code $REPO_DIR $BUILD_COMMIT
+        build_wheel $REPO_DIR $PLAT
     #     if [[ $TRAVIS_OS_NAME = "osx" ]]; then disable_system_openmp; fi
     #     # install_run $PLAT
-    #   displayName: Build
-    #   env:
-    #     TRAVIS_OS_NAME: ${{ parameters.name }}
+      displayName: Build
+      env:
+        TRAVIS_OS_NAME: ${{ parameters.name }}
     - script: |
         pip install wheelhouse-uploader
-        ls "$(AGENT_WORKFOLDER)"
+        ls "$AGENT_WORKFOLDER/wheelhouse"
 
 
 
