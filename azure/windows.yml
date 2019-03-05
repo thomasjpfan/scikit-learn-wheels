@@ -51,9 +51,10 @@ jobs:
         pip install --timeout=60 pytest wheel scipy==%SCIPY_BUILD_DEP% Cython==%CYTHON_BUILD_DEP%
 
         python setup.py bdist_wheel
-        pip install --pre --no-index --find-links dist scikit-learn
+        pip install --pre --no-index --find-links dist/ scikit-learn
 
-        del setup.cfg
+        mkdir tmp_dir
+        cd tmp_dir
 
         pip install -U --timeout=60 numpy
         pytest -rs --pyargs sklearn
