@@ -8,6 +8,10 @@ jobs:
   pool:
     vmImage: ${{ parameters.vmImage }}
   variables:
+    REPO_DIR: 'scikit-learn'
+    BUILD_COMMIT: '0.20.3'
+    PLAT: 'x86_64'
+    UNICODE_WIDTH: '32'
     NP_BUILD_DEP: 'numpy==1.8.2'
     NP_TEST_DEP: 'numpy==1.13.1'
     CYTHON_BUILD_DEP: 'cython==0.28.5'
@@ -37,9 +41,14 @@ jobs:
         source multibuild/travis_steps.sh
         before_install
         if [[ $TRAVIS_OS_NAME = "osx" ]]; then enable_openmp; fi
-      displayName: Before install
-    - script: |
-        which clean_code
+        clean_code $REPO_DIR $BUILD_COMMIT
+        build_wheel $REPO_DIR $PLAT
+        if [[ $TRAVIS_OS_NAME = "osx" ]]; then disable_system_openmp; fi
+        install_run $PLAT
+      displayName: Build sklearn
+      env:
+        TRAVIS_OS_NAME: ${{ parameters.name }}
+
 
 
 
