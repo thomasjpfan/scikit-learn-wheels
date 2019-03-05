@@ -30,9 +30,13 @@ jobs:
         versionSpec: $(MB_PYTHON_VERSION)
       displayName: Set python version
     - script: |
+        if [ "$BUILD_REASON" == "Schedule" ]; then
+          if [ "$DAILY_BUILD" != "true" ]; then
+            exit 0
+          fi
+        fi
+
         pip install virtualenv
-      displayName: Install virtualenv
-    - script: |
         echo "Building scikit-learn-$BUILD_COMMIT"
         BUILD_DEPENDS="$NP_BUILD_DEP $CYTHON_BUILD_DEP $SCIPY_BUILD_DEP"
         TEST_DEPENDS="$NP_TEST_DEP pytest $CYTHON_TEST_DEP $SCIPY_TEST_DEP"
@@ -47,14 +51,24 @@ jobs:
       displayName: Build
       env:
         TRAVIS_OS_NAME: ${{ parameters.name }}
-    - task: PublishPipelineArtifact@0
-      inputs:
-        artifactName: ${{ format('{0}-$(Agent.JobName)', parameters.name) }}
-        targetPath: $(Build.Repository.LocalPath)/wheelhouse
-      displayName: Upload artifact
-
-
-
-
-
+    - script: |
+        if [ "$BUILD_REASON" == "Schedule" ]; then
+          if [ "$DAILY_BUILD" != "true" ]; then
+            exit 0
+          fi
+          CONTAINER="sklearn-nightly"
+          BUILD_COMMIT=${DAILY_COMMIT:-$BUILD_COMMIT}
+        else
+          CONTAINER=wheels
+          UPLOAD_ARGS="--no-update-index"
+        fi
+        pip install wheelhouse-uploader
+        python -m wheelhouse_uploader upload --local-folder
+          $BUILD_REPOSITORY_LOCALPATH/wheelhouse/
+          $UPLOAD_ARGS
+          $CONTAINER
+      condition: succeeded()
+      env:
+        WHEELHOUSE_UPLOADER_SECRET: $(WHEELHOUSE_UPLOADER_SECRET)
+        WHEELHOUSE_UPLOADER_USERNAME: $(WHEELHOUSE_UPLOADER_USERNAME)
 
