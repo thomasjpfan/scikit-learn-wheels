@@ -15,6 +15,7 @@ jobs:
     SCIPY_BUILD_DEP: '1.1.0'
     DAILY_COMMIT: 'master'
     DAILY_BUILD: 'false'
+    PYTHON_ARCH: 'x64'
   strategy:
     matrix:
       ${{ insert }}: ${{ parameters.matrix }}
@@ -24,6 +25,7 @@ jobs:
     - task: UsePythonVersion@0
       inputs:
         versionSpec: $(MB_PYTHON_VERSION)
+        architecture: $(PYTHON_ARCH)
       displayName: Set python version
     - script: |
         echo %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%
@@ -56,6 +58,7 @@ jobs:
 
         pip install -U --timeout=60 numpy
         pytest -rs --pyargs sklearn
+      displayName: Build and test
     - script: |
         if "%BUILD_REASON%" == "Schedule" (
           if "%DAILY_BUILD%" == "false" (
