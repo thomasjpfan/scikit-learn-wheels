@@ -4,9 +4,9 @@ jobs:
     name: Linux
     vmImage: ubuntu-16.04
     matrix:
-      linux_3.7:
+      linux_3_7:
         NP_TEST_DEP: '1.14.5'
         NP_TEST_DEP: '1.14.5'
-      linux_3.6:
+      linux_3_6:
         NP_TEST_DEP: '1.14.5'
         NP_TEST_DEP: '1.14.5'
