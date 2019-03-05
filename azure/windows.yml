@@ -37,29 +37,36 @@ jobs:
     - script: |
         # Schedule == nightly builds
         if "%BUILD_REASON%" == "Schedule" (
-          if "%DAILY_BUILD%" == "false" (
+          if "%DAILY_BUILD%" != "true" (
             exit 0
           )
           set BUILD_COMMIT = %DAILY_COMMIT%
         )
-        cd scikit-learn
+        pushd scikit-learn
         git checkout %DAILY_COMMIT%
         git clean -fxd
         git reset --hard
+        popd
       displayName: Checkout commit
     - script: |
-        pushd scikit-learn
         pip install --timeout=60 numpy==%NP_BUILD_DEP%
         pip install --timeout=60 pytest wheel scipy==%SCIPY_BUILD_DEP% Cython==%CYTHON_BUILD_DEP%
 
+        pushd scikit-learn
         python setup.py bdist_wheel
         pip install --pre --no-index --find-links dist/ scikit-learn
-
         popd
 
+        # run inside another directory to run tests on the installed
+        # library
         mkdir tmp
         cd tmp
 
+        # Install the newest version of numpy for the tests: the goal is to ensure
+        # that the scikit-learn wheels are binary compatible both with the old numpy
+        # version against which they were built and the newest numpy version at the
+        # time of the release, that is the version of numpy that users are most
+        # likely to use.
         pip install -U --timeout=60 numpy
         pytest -rs --pyargs sklearn
       displayName: Build and test
@@ -74,7 +81,11 @@ jobs:
           set CONTAINER = "wheels"
           set UPLOAD_ARGS = "--no-update-index"
         )
+        # Upload the generated wheel package to Rackspace
+        # On Windows, Apache Libcloud cannot find a standard CA cert bundle so we
+        # disable the ssl checks.
         pip install --timeout=60 wheelhouse_uploader
+        cd scikit-learn
         python -m wheelhouse_uploader upload \
           --no-ssl-check \
           --local-folder=dist \
