@@ -24,7 +24,7 @@ jobs:
       submodules: true
     - task: UsePythonVersion@0
       inputs:
-        versionSpec: $(MB_PYTHON_VERSION)
+        versionSpec: $(PYTHON_VERSION)
         architecture: $(PYTHON_ARCH)
       displayName: Set python version
     - script: |
