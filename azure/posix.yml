@@ -47,19 +47,31 @@ jobs:
         pip install virtualenv
         BUILD_DEPENDS="$NP_BUILD_DEP $CYTHON_BUILD_DEP $SCIPY_BUILD_DEP"
         TEST_DEPENDS="$NP_TEST_DEP pytest $CYTHON_TEST_DEP $SCIPY_TEST_DEP"
+
+        if [ `uname` == 'Darwin' ]; then
+          TRAVIS_OS_NAME='osx'
+        else
+          TRAVIS_OS_NAME='linux'
+        fi
+
         source multibuild/common_utils.sh
         source multibuild/travis_steps.sh
         before_install
 
         # OpenMP is not present on osx by default
-        if [[ $TRAVIS_OS_NAME = "osx" ]]; then enable_openmp; fi
+        if [ $TRAVIS_OS_NAME == "osx" ]; then
+          enable_openmp;
+        fi
+
         clean_code $REPO_DIR $BUILD_COMMIT
         build_wheel $REPO_DIR $PLAT
-        if [[ $TRAVIS_OS_NAME = "osx" ]]; then disable_system_openmp; fi
+
+        if [ $TRAVIS_OS_NAME == "osx" ]; then
+          disable_system_openmp;
+        fi
+
         # install_run $PLAT
       displayName: Build and Test
-      env:
-        TRAVIS_OS_NAME: ${{ parameters.name }}
     - script: |
         if [ "$BUILD_REASON" == "Schedule" ]; then
           if [ "$DAILY_BUILD" != "true" ]; then

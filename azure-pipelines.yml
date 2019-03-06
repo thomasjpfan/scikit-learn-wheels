@@ -1,25 +1,25 @@
 jobs:
-# - template: azure/posix.yml
-#   parameters:
-#     name: linux
-#     vmImage: ubuntu-16.04
-#     matrix:
-#       py3.7_x64:
-#         NP_BUILD_DEP: 'numpy==1.14.5'
-#         NP_TEST_DEP: 'numpy==1.14.5'
-#         MB_PYTHON_VERSION: '3.7'
-#         DAILY_BUILD: 'true'
+- template: azure/posix.yml
+  parameters:
+    name: linux
+    vmImage: ubuntu-16.04
+    matrix:
+      py3.7_x64:
+        NP_BUILD_DEP: 'numpy==1.14.5'
+        NP_TEST_DEP: 'numpy==1.14.5'
+        MB_PYTHON_VERSION: '3.7'
+        DAILY_BUILD: 'true'
 
-# - template: azure/posix.yml
-#   parameters:
-#     name: osx
-#     vmImage: xcode9-macos10.13
-#     matrix:
-#       py3.7_x64:
-#         NP_BUILD_DEP: 'numpy==1.14.5'
-#         NP_TEST_DEP: 'numpy==1.14.5'
-#         MB_PYTHON_VERSION: '3.7'
-#         DAILY_BUILD: 'true'
+- template: azure/posix.yml
+  parameters:
+    name: macOS
+    vmImage: xcode9-macos10.13
+    matrix:
+      py3.7_x64:
+        NP_BUILD_DEP: 'numpy==1.14.5'
+        NP_TEST_DEP: 'numpy==1.14.5'
+        MB_PYTHON_VERSION: '3.7'
+        DAILY_BUILD: 'true'
 
 - template: azure/windows.yml
   parameters:
