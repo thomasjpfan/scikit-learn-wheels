@@ -20,6 +20,7 @@ jobs:
     SCIPY_TEST_DEP: 'scipy'
     DAILY_COMMIT: 'master'
     DAILY_BUILD: 'false'
+  condition: or(ne(variables['Build.Reason'], 'Schedule'), eq(variables['DAILY_BUILD'], 'true'))
   strategy:
     matrix:
       ${{ insert }}: ${{ parameters.matrix }}
@@ -60,17 +61,17 @@ jobs:
 
         # OpenMP is not present on osx by default
         if [ $TRAVIS_OS_NAME == "osx" ]; then
-          enable_openmp;
+          enable_openmp
         fi
 
         clean_code $REPO_DIR $BUILD_COMMIT
         build_wheel $REPO_DIR $PLAT
 
         if [ $TRAVIS_OS_NAME == "osx" ]; then
-          disable_system_openmp;
+          disable_system_openmp
         fi
 
-        install_run $PLAT
+        # install_run $PLAT
       displayName: Build and Test
     - script: |
         if [ "$BUILD_REASON" == "Schedule" ]; then
