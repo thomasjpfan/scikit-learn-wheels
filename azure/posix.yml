@@ -70,7 +70,7 @@ jobs:
           disable_system_openmp;
         fi
 
-        # install_run $PLAT
+        install_run $PLAT
       displayName: Build and Test
     - script: |
         if [ "$BUILD_REASON" == "Schedule" ]; then
