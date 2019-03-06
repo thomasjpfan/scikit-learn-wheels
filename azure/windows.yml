@@ -16,7 +16,6 @@ jobs:
     DAILY_COMMIT: 'master'
     DAILY_BUILD: 'false'
     PYTHON_ARCH: 'x64'
-  condition: or(ne(variables['Build.Reason'], 'Schedule'), eq(variables['DAILY_BUILD'], 'true'))
   strategy:
     matrix:
       ${{ insert }}: ${{ parameters.matrix }}
@@ -37,6 +36,9 @@ jobs:
       displayName: Check that we have the expected version and architecture for Python
     - script: |
         if "%BUILD_REASON%" == "Schedule" (
+          if NOT "%DAILY_BUILD%" == "true" (
+            exit 0
+          )
           set BUILD_COMMIT = %DAILY_COMMIT%
         )
         pushd scikit-learn
@@ -46,6 +48,11 @@ jobs:
         popd
       displayName: Checkout commit
     - script: |
+        if "%BUILD_REASON%" == "Schedule" (
+          if NOT "%DAILY_BUILD%" == "true" (
+            exit 0
+          )
+        )
         pip install --timeout=60 numpy==%NP_BUILD_DEP%
         pip install --timeout=60 pytest wheel scipy==%SCIPY_BUILD_DEP% Cython==%CYTHON_BUILD_DEP%
 
@@ -62,6 +69,9 @@ jobs:
       displayName: Build and Test
     - script: |
         if "%BUILD_REASON%" == "Schedule" (
+          if NOT "%DAILY_BUILD%" == "true" (
+            exit 0
+          )
           set CONTAINER = "sklearn-nightly"
         ) else (
           set CONTAINER = "wheels"

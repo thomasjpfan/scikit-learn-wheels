@@ -20,7 +20,6 @@ jobs:
     SCIPY_TEST_DEP: 'scipy'
     DAILY_COMMIT: 'master'
     DAILY_BUILD: 'false'
-  condition: or(ne(variables['Build.Reason'], 'Schedule'), eq(variables['DAILY_BUILD'], 'true'))
   strategy:
     matrix:
       ${{ insert }}: ${{ parameters.matrix }}
@@ -37,11 +36,7 @@ jobs:
           if [ "$DAILY_BUILD" != "true" ]; then
             exit 0
           fi
-          CONTAINER="sklearn-nightly"
-          BUILD_COMMIT=${DAILY_COMMIT:-$BUILD_COMMIT}
-        else
-          CONTAINER=wheels
-          UPLOAD_ARGS="--no-update-index"
+          BUILD_COMMIT=$DAILY_COMMIT
         fi
         echo "Building scikit-learn-$BUILD_COMMIT"
 
@@ -79,9 +74,9 @@ jobs:
             exit 0
           fi
           CONTAINER="sklearn-nightly"
-          BUILD_COMMIT=${DAILY_COMMIT:-$BUILD_COMMIT}
+          BUILD_COMMIT="$DAILY_COMMIT"
         else
-          CONTAINER=wheels
+          CONTAINER="wheels"
           UPLOAD_ARGS="--no-update-index"
         fi
         pip install wheelhouse-uploader
