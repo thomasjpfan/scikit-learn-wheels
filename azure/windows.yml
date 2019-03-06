@@ -74,12 +74,8 @@ jobs:
         )
         pip install --timeout=60 wheelhouse_uploader
         cd scikit-learn
-        python -m wheelhouse_uploader upload \
-          --no-ssl-check \
-          --local-folder=dist \
-          %UPLOAD_ARGS% \
-          %CONTAINER%
-      condition: succeeded()
+        python -m wheelhouse_uploader upload --no-ssl-check --local-folder=dist %UPLOAD_ARGS% %CONTAINER%
+      condition: and(succeeded(), not(contains(variables['Build.SourceVersionMessage'], '[no upload]')))
       env:
         WHEELHOUSE_UPLOADER_SECRET: $(WHEELHOUSE_UPLOADER_SECRET)
         WHEELHOUSE_UPLOADER_USERNAME: $(WHEELHOUSE_UPLOADER_USERNAME)
