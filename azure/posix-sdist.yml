@@ -10,12 +10,12 @@ jobs:
       TEST_VENV: "test_env"
       MB_PYTHON_VERSION: "3.8"
     steps:
-      - checkout: self
-        submodules: true
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: $(MB_PYTHON_VERSION)
-        displayName: Set python version
+      # - checkout: self
+      #   submodules: true
+      # - task: UsePythonVersion@0
+      #   inputs:
+      #     versionSpec: $(MB_PYTHON_VERSION)
+      #   displayName: Set python version
       - bash: |
           set -e
           SKIP_BUILD="false"
@@ -106,7 +106,10 @@ jobs:
             TOKEN="$SCIKIT_LEARN_STAGING_UPLOAD_TOKEN"
           fi
 
-          echo $TOKEN
+          echo type $SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN
+          echo type $SCIKIT_LEARN_STAGING_UPLOAD_TOKEN
+          echo type $TOKEN
+
           if [ "$TOKEN" == "" ]; then
             echo "##[warning] Could not find anaconda.org upload token in secret variables"
           fi
