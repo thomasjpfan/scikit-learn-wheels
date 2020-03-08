@@ -16,88 +16,91 @@ jobs:
         inputs:
           versionSpec: $(MB_PYTHON_VERSION)
         displayName: Set python version
+      # - bash: |
+      #     set -e
+      #     SKIP_BUILD="false"
+      #     if [ "$BUILD_REASON" == "Schedule" ]; then
+      #       BUILD_COMMIT=$NIGHTLY_BUILD_COMMIT
+      #       if [ "$NIGHTLY_BUILD" != "true" ]; then
+      #         SKIP_BUILD="true"
+      #       fi
+      #     fi
+
+      #     echo "Building scikit-learn@$BUILD_COMMIT"
+      #     echo "##vso[task.setvariable variable=BUILD_COMMIT]$BUILD_COMMIT"
+      #     echo "##vso[task.setvariable variable=SKIP_BUILD]$SKIP_BUILD"
+      #   displayName: Define build env variables
+
+      # - bash: |
+      #     set -e
+
+      #     python -m venv build_env
+      #     source build_env/bin/activate
+      #     python -m pip install numpy scipy Cython
+
+      #     cd scikit-learn
+      #     git checkout $BUILD_COMMIT
+      #     python setup.py sdist
+      #   displayName: Create build venv with build dependices and build source dist
+
+      # - bash: |
+      #     set -e
+
+      #     source build_env/bin/activate
+      #     python -m pip install twine
+
+      #     twine check scikit-learn/dist/*
+      #   displayName: Twine check
+      # - bash: |
+      #     set -e
+
+      #     python -m venv $TEST_VENV
+      #     source $TEST_VENV/bin/activate
+      #     python --version
+      #     python -m pip install -U pip
+
+      #     # pyproject.toml will be released with >=0.23
+      #     if [[ "$BUILD_COMMIT" =~ ^0.22* ]]; then
+      #       python -m pip install Cython
+      #     fi
+
+      #     # Uses pep 517
+      #     pip install scikit-learn/dist/*.tar.gz
+      #   displayName: Create test venv and install using source dist
+
+      # - bash: |
+      #     set -e
+      #     source $TEST_VENV/bin/activate
+
+      #     mkdir $TEST_DIR
+      #     cd $TEST_DIR
+
+      #     python -m pip install pytest
+      #     # pytest -l --junitxml=$JUNITXML --pyargs sklearn
+      #   displayName: Runs tests
+
+      # - task: PublishTestResults@2
+      #   inputs:
+      #     testResultsFiles: "$(TEST_DIR)/$(JUNITXML)"
+      #     testRunTitle: ${{ format('{0}-$(Agent.JobName)', 'Linux_Source_Dist') }}
+      #   displayName: "Publish Test Results"
+      #   condition: eq(variables['SKIP_BUILD'], 'false')
+
+      # - bash: |
+      #     echo "##vso[task.prependpath]$CONDA/bin"
+      #     sudo chown -R $USER $CONDA
+      #   displayName: Add conda to PATH
+      #   condition: and(succeeded(), eq(variables['SKIP_BUILD'], 'false'), ne(variables['Build.Reason'], 'PullRequest'))
+
+      # - bash: conda install -q -y anaconda-client
+      #   displayName: Install anaconda-client
+      #   condition: and(succeeded(), eq(variables['SKIP_BUILD'], 'false'), ne(variables['Build.Reason'], 'PullRequest'))
+
       - bash: |
           set -e
-          SKIP_BUILD="false"
-          if [ "$BUILD_REASON" == "Schedule" ]; then
-            BUILD_COMMIT=$NIGHTLY_BUILD_COMMIT
-            if [ "$NIGHTLY_BUILD" != "true" ]; then
-              SKIP_BUILD="true"
-            fi
-          fi
+          echo $SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN
+          echo $SCIKIT_LEARN_STAGING_UPLOAD_TOKEN
 
-          echo "Building scikit-learn@$BUILD_COMMIT"
-          echo "##vso[task.setvariable variable=BUILD_COMMIT]$BUILD_COMMIT"
-          echo "##vso[task.setvariable variable=SKIP_BUILD]$SKIP_BUILD"
-        displayName: Define build env variables
-
-      - bash: |
-          set -e
-
-          python -m venv build_env
-          source build_env/bin/activate
-          python -m pip install numpy scipy Cython
-
-          cd scikit-learn
-          git checkout $BUILD_COMMIT
-          python setup.py sdist
-        displayName: Create build venv with build dependices and build source dist
-
-      - bash: |
-          set -e
-
-          source build_env/bin/activate
-          python -m pip install twine
-
-          twine check scikit-learn/dist/*
-        displayName: Twine check
-      - bash: |
-          set -e
-
-          python -m venv $TEST_VENV
-          source $TEST_VENV/bin/activate
-          python --version
-          python -m pip install -U pip
-
-          # pyproject.toml will be released with >=0.23
-          if [[ "$BUILD_COMMIT" =~ ^0.22* ]]; then
-            python -m pip install Cython
-          fi
-
-          # Uses pep 517
-          pip install scikit-learn/dist/*.tar.gz
-        displayName: Create test venv and install using source dist
-
-      - bash: |
-          set -e
-          source $TEST_VENV/bin/activate
-
-          mkdir $TEST_DIR
-          cd $TEST_DIR
-
-          python -m pip install pytest
-          # pytest -l --junitxml=$JUNITXML --pyargs sklearn
-        displayName: Runs tests
-
-      - task: PublishTestResults@2
-        inputs:
-          testResultsFiles: "$(TEST_DIR)/$(JUNITXML)"
-          testRunTitle: ${{ format('{0}-$(Agent.JobName)', 'Linux_Source_Dist') }}
-        displayName: "Publish Test Results"
-        condition: eq(variables['SKIP_BUILD'], 'false')
-
-      - bash: |
-          echo "##vso[task.prependpath]$CONDA/bin"
-          sudo chown -R $USER $CONDA
-        displayName: Add conda to PATH
-        condition: and(succeeded(), eq(variables['SKIP_BUILD'], 'false'), ne(variables['Build.Reason'], 'PullRequest'))
-
-      - bash: conda install -q -y anaconda-client
-        displayName: Install anaconda-client
-        condition: and(succeeded(), eq(variables['SKIP_BUILD'], 'false'), ne(variables['Build.Reason'], 'PullRequest'))
-
-      - bash: |
-          set -e
           if [ "$BUILD_REASON" == "Schedule" ]; then
             ANACONDA_ORG="scipy-wheels-nightly"
             TOKEN="$SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN"
@@ -116,13 +119,12 @@ jobs:
           # Secret variables need to mapped to env variables explicitly:
           SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN: $(SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)
           SCIKIT_LEARN_STAGING_UPLOAD_TOKEN: $(SCIKIT_LEARN_STAGING_UPLOAD_TOKEN)
-
-      - bash: |
-          set -e
-          # The --force option forces a replacement if the remote file already
-          # exists.
-          ls scikit-learn/dist/*.tar.gz
-          anaconda -t $TOKEN upload --force -u $ANACONDA_ORG scikit-learn/dist/*.tar.gz
-          echo "PyPI-style index: https://pypi.anaconda.org/$ANACONDA_ORG/simple"
-        displayName: Upload to anaconda.org (only if secret token is retrieved)
-        condition: ne(variables['TOKEN'], '')
+      # - bash: |
+      #     set -e
+      #     # The --force option forces a replacement if the remote file already
+      #     # exists.
+      #     ls scikit-learn/dist/*.tar.gz
+      #     anaconda -t $TOKEN upload --force -u $ANACONDA_ORG scikit-learn/dist/*.tar.gz
+      #     echo "PyPI-style index: https://pypi.anaconda.org/$ANACONDA_ORG/simple"
+      #   displayName: Upload to anaconda.org (only if secret token is retrieved)
+      #   condition: ne(variables['TOKEN'], '')
