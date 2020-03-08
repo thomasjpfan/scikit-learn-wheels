@@ -99,8 +99,14 @@ jobs:
       - bash: |
           set -e
 
-          echo $(SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)
-          echo $SCIKIT_LEARN_STAGING_UPLOAD_TOKEN
+          if ! [ -x "$(command -v SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN) ]; then
+            echo "$SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN defined"
+          fi
+
+          if ! [ -x "$(command -v SCIKIT_LEARN_STAGING_UPLOAD_TOKEN) ]; then
+            echo "$SCIKIT_LEARN_STAGING_UPLOAD_TOKEN defined"
+          fi
+
           if [ "$BUILD_REASON" == "Schedule" ]; then
             ANACONDA_ORG="scipy-wheels-nightly"
             TOKEN="$SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN"
