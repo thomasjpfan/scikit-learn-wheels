@@ -101,7 +101,7 @@ jobs:
 
           # Early exit if secret SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN is not defined
           echo "$SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN wow"
-          if [[ "$SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN" =~ *SCIKIT* ]]; then
+          if [[ "$SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN" == "$(SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)" ]]; then
             echo "hello there"
             exit 0
           fi
