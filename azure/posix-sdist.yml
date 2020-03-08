@@ -16,20 +16,20 @@ jobs:
         inputs:
           versionSpec: $(MB_PYTHON_VERSION)
         displayName: Set python version
-      # - bash: |
-      #     set -e
-      #     SKIP_BUILD="false"
-      #     if [ "$BUILD_REASON" == "Schedule" ]; then
-      #       BUILD_COMMIT=$NIGHTLY_BUILD_COMMIT
-      #       if [ "$NIGHTLY_BUILD" != "true" ]; then
-      #         SKIP_BUILD="true"
-      #       fi
-      #     fi
+      - bash: |
+          set -e
+          SKIP_BUILD="false"
+          if [ "$BUILD_REASON" == "Schedule" ]; then
+            BUILD_COMMIT=$NIGHTLY_BUILD_COMMIT
+            if [ "$NIGHTLY_BUILD" != "true" ]; then
+              SKIP_BUILD="true"
+            fi
+          fi
 
-      #     echo "Building scikit-learn@$BUILD_COMMIT"
-      #     echo "##vso[task.setvariable variable=BUILD_COMMIT]$BUILD_COMMIT"
-      #     echo "##vso[task.setvariable variable=SKIP_BUILD]$SKIP_BUILD"
-      #   displayName: Define build env variables
+          echo "Building scikit-learn@$BUILD_COMMIT"
+          echo "##vso[task.setvariable variable=BUILD_COMMIT]$BUILD_COMMIT"
+          echo "##vso[task.setvariable variable=SKIP_BUILD]$SKIP_BUILD"
+        displayName: Define build env variables
 
       # - bash: |
       #     set -e
