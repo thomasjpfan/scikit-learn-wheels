@@ -98,10 +98,12 @@ jobs:
 
       - bash: |
           set -e
-          echo $(SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)
-          echo $(SCIKIT_LEARN_STAGING_UPLOAD_TOKEN)
 
-          if []
+          # Early exit if secret SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN is not defined
+          if [[ $SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN =~ *SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN* ]]; then
+            echo "hello there"
+            exit 0
+          fi
 
           if [ "$BUILD_REASON" == "Schedule" ]; then
             ANACONDA_ORG="scipy-wheels-nightly"
