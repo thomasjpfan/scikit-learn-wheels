@@ -100,11 +100,11 @@ jobs:
           set -e
 
           if ! [ -x "$(command -v SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN) ]; then
-            echo "$SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN defined"
+            echo "SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN not defined"
           fi
 
           if ! [ -x "$(command -v SCIKIT_LEARN_STAGING_UPLOAD_TOKEN) ]; then
-            echo "$SCIKIT_LEARN_STAGING_UPLOAD_TOKEN defined"
+            echo "SCIKIT_LEARN_STAGING_UPLOAD_TOKEN not defined"
           fi
 
           if [ "$BUILD_REASON" == "Schedule" ]; then
