@@ -101,7 +101,7 @@ jobs:
 
           echo "$SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN"
           echo "$SCIKIT_LEARN_STAGING_UPLOAD_TOKEN"
-          if [[ -x "$(command -v SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)" ]; then
+          if [ -x "$(command -v SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)" ]; then
             echo "hello"
           fi
 
