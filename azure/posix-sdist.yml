@@ -99,13 +99,8 @@ jobs:
       - bash: |
           set -e
 
-          if ! [ -x "$(command -v SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)" ]; then
-            echo "SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN not defined"
-          fi
-
-          if ! [ -x "$(command -v SCIKIT_LEARN_STAGING_UPLOAD_TOKEN)" ]; then
-            echo "SCIKIT_LEARN_STAGING_UPLOAD_TOKEN not defined"
-          fi
+          echo "$SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN"
+          echo "$SCIKIT_LEARN_STAGING_UPLOAD_TOKEN"
 
           if [ "$BUILD_REASON" == "Schedule" ]; then
             ANACONDA_ORG="scipy-wheels-nightly"
@@ -120,7 +115,7 @@ jobs:
           echo "##vso[task.setvariable variable=TOKEN]$TOKEN"
           echo "##vso[task.setvariable variable=ANACONDA_ORG]$ANACONDA_ORG"
         displayName: Retrieve secret upload token
-        condition: and(succeeded(), eq(variables['SKIP_BUILD'], 'false'), ne(variables['Build.Reason'], 'PullRequest'), or(ne(variables['SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN'], ''), ne(variables['SCIKIT_LEARN_STAGING_UPLOAD_TOKEN'], '')))
+        condition: and(succeeded(), eq(variables['SKIP_BUILD'], 'false'), ne(variables['Build.Reason'], 'PullRequest'))
         env:
           # Secret variables need to mapped to env variables explicitly:
           SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN: $(SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)
