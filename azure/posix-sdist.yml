@@ -99,11 +99,11 @@ jobs:
       - bash: |
           set -e
 
-          if ! [ -x "$(command -v SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN) ]; then
+          if ! [ -x "$(command -v SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)" ]; then
             echo "SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN not defined"
           fi
 
-          if ! [ -x "$(command -v SCIKIT_LEARN_STAGING_UPLOAD_TOKEN) ]; then
+          if ! [ -x "$(command -v SCIKIT_LEARN_STAGING_UPLOAD_TOKEN)" ]; then
             echo "SCIKIT_LEARN_STAGING_UPLOAD_TOKEN not defined"
           fi
 
