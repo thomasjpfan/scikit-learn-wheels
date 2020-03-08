@@ -101,6 +101,7 @@ jobs:
 
           # Early exit if secret SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN is not defined
           if ! [ -x "$(command -v SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)" ]; then
+            echo "hello world"
             exit 0
           fi
 
