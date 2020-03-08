@@ -104,6 +104,9 @@ jobs:
           if [ -x "$(command -v SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN)" ]; then
             echo "hello"
           fi
+          if [ -x "$(command -v SCIKIT_LEARN_STAGING_UPLOAD_TOKEN)" ]; then
+            echo "hehe hello"
+          fi
 
           if [ "$BUILD_REASON" == "Schedule" ]; then
             ANACONDA_ORG="scipy-wheels-nightly"
