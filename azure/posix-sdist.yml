@@ -110,7 +110,7 @@ jobs:
             echo "##[warning] Could not find anaconda.org upload token in secret variables"
           fi
 
-          type $TOKEN
+          $TOKEN
 
           echo "##vso[task.setvariable variable=TOKEN]$TOKEN"
           echo "##vso[task.setvariable variable=ANACONDA_ORG]$ANACONDA_ORG"
