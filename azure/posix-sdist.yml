@@ -122,6 +122,7 @@ jobs:
           SCIKIT_LEARN_STAGING_UPLOAD_TOKEN: $(SCIKIT_LEARN_STAGING_UPLOAD_TOKEN)
       - bash: |
           set -e
+          echo $TOKEN
           # The --force option forces a replacement if the remote file already
           # exists.
           # ls scikit-learn/dist/*.tar.gz
