@@ -106,6 +106,7 @@ jobs:
           fi
 
           echo $SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN
+          echo $?
           if [ "$?" == "0" ]; then
             echo "##[warning] Could not find anaconda.org upload token in secret variables"
           fi
