@@ -106,11 +106,11 @@ jobs:
             TOKEN="$SCIKIT_LEARN_STAGING_UPLOAD_TOKEN"
           fi
 
-          $SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN
-
-          $TOKEN || {
+          if [ "$TOKEN" == "" ]; then
             echo "##[warning] Could not find anaconda.org upload token in secret variables"
-          }
+          else
+            echo "##[hehe] wow"
+          fi
 
           echo "##vso[task.setvariable variable=TOKEN]$TOKEN"
           echo "##vso[task.setvariable variable=ANACONDA_ORG]$ANACONDA_ORG"
