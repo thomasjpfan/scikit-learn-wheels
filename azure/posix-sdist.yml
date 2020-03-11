@@ -122,8 +122,8 @@ jobs:
           SCIKIT_LEARN_STAGING_UPLOAD_TOKEN: $(SCIKIT_LEARN_STAGING_UPLOAD_TOKEN)
       - bash: |
           set -e
-          The --force option forces a replacement if the remote file already
-          exists.
+          # The --force option forces a replacement if the remote file already
+          # exists.
           mkdir -p scikit-learn/dist
           touch scikit-learn/dist/wow.tar.gz
           anaconda -t $TOKEN upload --force -u $ANACONDA_ORG scikit-learn/dist/*.tar.gz
