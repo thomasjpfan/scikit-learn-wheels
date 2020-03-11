@@ -105,7 +105,9 @@ jobs:
             TOKEN="$SCIKIT_LEARN_STAGING_UPLOAD_TOKEN"
           fi
 
-          $TOKEN
+          echo $TOKEN
+          echo $SCIKIT_LEARN_NIGHTLY_UPLOAD_TOKEN
+          echo $SCIKIT_LEARN_STAGING_UPLOAD_TOKEN
           if [ "$?" == "0" ]; then
             echo "##[warning] Could not find anaconda.org upload token in secret variables"
           fi
