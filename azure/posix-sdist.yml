@@ -86,15 +86,15 @@ jobs:
       #   displayName: "Publish Test Results"
       #   condition: eq(variables['SKIP_BUILD'], 'false')
 
-      # - bash: |
-      #     echo "##vso[task.prependpath]$CONDA/bin"
-      #     sudo chown -R $USER $CONDA
-      #   displayName: Add conda to PATH
-      #   condition: and(succeeded(), eq(variables['SKIP_BUILD'], 'false'), ne(variables['Build.Reason'], 'PullRequest'))
+      - bash: |
+          echo "##vso[task.prependpath]$CONDA/bin"
+          sudo chown -R $USER $CONDA
+        displayName: Add conda to PATH
+        condition: and(succeeded(), eq(variables['SKIP_BUILD'], 'false'), ne(variables['Build.Reason'], 'PullRequest'))
 
-      # - bash: conda install -q -y anaconda-client
-      #   displayName: Install anaconda-client
-      #   condition: and(succeeded(), eq(variables['SKIP_BUILD'], 'false'), ne(variables['Build.Reason'], 'PullRequest'))
+      - bash: conda install -q -y anaconda-client
+        displayName: Install anaconda-client
+        condition: and(succeeded(), eq(variables['SKIP_BUILD'], 'false'), ne(variables['Build.Reason'], 'PullRequest'))
 
       - bash: |
           if [ "$BUILD_REASON" == "Schedule" ]; then
