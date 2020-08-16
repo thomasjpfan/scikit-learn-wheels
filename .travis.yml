@@ -1,13 +1,15 @@
 env:
   global:
       - REPO_DIR="scikit-learn"
-      - BUILD_COMMIT=0.20.1
+      - BUILD_COMMIT=0.23.2
       - UNICODE_WIDTH=32
       - SCIPY_BUILD_DEP="scipy"
       - SCIPY_TEST_DEP="scipy"
       - TEST_BUILDS=1
       - PLAT=aarch64
       - MB_ML_VER=2014
+      - DAILY_COMMIT=master
+      - DAILY_BUILD=false
       - DOCKER_TEST_IMAGE=multibuild/xenial_aarch64
 
 language: python
@@ -32,10 +34,22 @@ matrix:
       env:
         - MB_PYTHON_VERSION=3.8
         - NP_BUILD_DEP=numpy==1.17.3
+        - DAILY_BUILD=true
 
 before_install:
+    - |
+      if [ "$TRAVIS_EVENT_TYPE" == "cron" ]; then
+          if [ "$DAILY_BUILD" != "true" ]; then
+              exit 0
+          fi
+          ANACONDA_ORG="scipy-wheels-nightly"
+          BUILD_COMMIT=${DAILY_COMMIT:-$BUILD_COMMIT}
+      else
+          ANACONDA_ORG="scikit-learn-wheels-staging"
+      fi
+    - echo "Building scikit-learn-$BUILD_COMMIT"
     - BUILD_DEPENDS="$NP_BUILD_DEP cython $SCIPY_BUILD_DEP"
-    - TEST_DEPENDS="$NP_TEST_DEP pytest $SCIPY_TEST_DEP"
+    - TEST_DEPENDS="$NP_TEST_DEP pytest $SCIPY_TEST_DEP pytest-xdist"
     - source multibuild/common_utils.sh
     - source multibuild/travis_steps.sh
     - before_install

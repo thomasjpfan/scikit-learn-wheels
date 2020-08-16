@@ -12,5 +12,8 @@ function pre_build {
 function run_tests {
     # Runs tests on installed distribution from an empty directory
     python --version
+    if [[ "$TEST_DEPENDS" == *"pytest-xdist"* ]]; then
+        pytest -l --junitxml=test-data.xml --pyargs sklearn -n 8
+    fi
     pytest -l --junitxml=test-data.xml --pyargs sklearn
 }
