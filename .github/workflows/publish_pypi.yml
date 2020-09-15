@@ -1,0 +1,14 @@
+on:
+  workflow_dispatch:
+    inputs:
+      inputs:
+        version:
+          description: 'Version to upload'
+          required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "Publishing: ${{ github.event.inputs.version }}"
