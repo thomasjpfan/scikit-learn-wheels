@@ -19,7 +19,7 @@ jobs:
         python-version: '3.8'
     - run: |
         pip install -U wheelhouse_uploader
-      displayName: Install dependencies
+      displayName: 'Install dependencies'
     - run: |
         echo "Download {{ github.event.inputs.version }} wheels and sdist"
         python -m wheelhouse_uploader fetch \
