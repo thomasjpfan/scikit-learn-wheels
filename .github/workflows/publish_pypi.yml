@@ -1,3 +1,4 @@
+name: Publish to Pypi
 on:
   workflow_dispatch:
     inputs:
