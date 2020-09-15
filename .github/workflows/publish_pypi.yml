@@ -1,10 +1,9 @@
 on:
   workflow_dispatch:
     inputs:
-      inputs:
-        version:
-          description: 'Version to upload'
-          required: true
+      version:
+        description: 'Version to upload'
+        required: true
 
 jobs:
   publish:
