@@ -24,11 +24,12 @@ jobs:
     - name: Downloading wheels and sdist from staging
       run: |
         echo "Download ${{ github.event.inputs.version }} wheels and sdist"
-        python -m wheelhouse_uploader fetch \
-          --version ${{ github.event.inputs.version }} \
-          --local-folder dist/ \
-          scikit-learn \
-          https://pypi.anaconda.org/scikit-learn-wheels-staging/simple/scikit-learn/
+        mkdir dist
+        # python -m wheelhouse_uploader fetch \
+        #   --version ${{ github.event.inputs.version }} \
+        #   --local-folder dist/ \
+        #   scikit-learn \
+        #   https://pypi.anaconda.org/scikit-learn-wheels-staging/simple/scikit-learn/
     - name: Check dist has the correct number of artifacts
       run: |
         python check_artifacts.py
