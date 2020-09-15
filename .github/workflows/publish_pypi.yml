@@ -20,16 +20,15 @@ jobs:
         python-version: '3.8'
     - name: Install dependencies
       run: |
-        pip install wheelhouse_uploader pyyaml
+        pip install -U wheelhouse_uploader pyyaml
     - name: Downloading wheels and sdist from staging
       run: |
         echo "Download ${{ github.event.inputs.version }} wheels and sdist"
-        mkdir dist
-        # python -m wheelhouse_uploader fetch \
-        #   --version ${{ github.event.inputs.version }} \
-        #   --local-folder dist/ \
-        #   scikit-learn \
-        #   https://pypi.anaconda.org/scikit-learn-wheels-staging/simple/scikit-learn/
+        python -m wheelhouse_uploader fetch \
+          --version ${{ github.event.inputs.version }} \
+          --local-folder dist/ \
+          scikit-learn \
+          https://pypi.anaconda.org/scikit-learn-wheels-staging/simple/scikit-learn/
     - name: Check dist has the correct number of artifacts
       run: |
         python check_artifacts.py
