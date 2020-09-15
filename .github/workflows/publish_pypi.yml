@@ -2,7 +2,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to upload'
+        description: 'Version upload to pypi'
         required: true
 
 jobs:
