@@ -11,4 +11,6 @@ install:
 
 script:
   # build the wheels, put them into './wheelhouse'
+  - cd scikit-learn
+  - git checkout 0.23.2
   - python3 -m cibuildwheel --output-dir wheelhouse
