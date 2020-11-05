@@ -9,7 +9,6 @@ jobs:
 
 install:
   - python3 --version
-  - which pip
   # - python3 -m pip install cibuildwheel==1.6.4
 
 script:
